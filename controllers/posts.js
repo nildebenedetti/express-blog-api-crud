@@ -3,7 +3,32 @@ import { posts } from '../contents/posts.js';
 // function logic per index route 
 
 function index(request, response) {
-    response.json(posts);
+    // usiamo il destrucrutring per prendere il parametro dalla request
+    const { tags: tag } = request.query;
+
+    // SE tag é uguale a undefined vuol dire che nella query non c'e, non sto cercando 
+    // nulla: quindi passiamo tutta la lista e adios
+    if (tag === undefined) {
+        response.json(posts);
+        return; // Ci fermiamo qui
+    };
+
+    // altrimenti parte tutto il mio viaggione
+
+    const realTag = tag.trim().toLowerCase(); // puliamo la query
+
+    const postsFiltered = posts.filter(post => {
+        // cicliamo l`array dei tag dentro il post (!!!) e restituiamo 
+        // tutti i current che mtchano il tag, anche parzialmente
+        for (let i = 0; i < post.tags.length; i++) {
+            const currentTag = post.tags[i].toLowerCase();
+            if (currentTag.includes(realTag)) {
+                return true;
+            };
+        }
+        return false;
+    });
+    response.json(postsFiltered)
 };
 
 // function logic per show route
@@ -162,7 +187,7 @@ function destroy(request, response) {
     if (postIndex === -1) {
         response.status(404).json({
             message: `nessun post con id ${realId}`
-        }) 
+        })
     } else {
         // faccio la splice su index
         posts.splice(postIndex, 1);
