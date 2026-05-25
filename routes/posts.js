@@ -1,6 +1,6 @@
 import express from 'express';
 import { error } from 'node:console';
-import { index, show, put, patch, create, deleteFn as destroy } from '../controllers/posts.js';
+import { index, show, put, patch, create, destroy } from '../controllers/posts.js';
 
 // file di routing con le rotte per la entity posts:
 // Operazioni CRUD: Index, Show, Update, Create
