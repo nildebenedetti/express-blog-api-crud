@@ -4,32 +4,40 @@ import { posts } from '../contents/posts.js';
 
 function index(request, response) {
     // usiamo il destrucrutring per prendere il parametro dalla request
-    const { tags: tag } = request.query;
+    const {
+        tags: tag,
+        maxPrepTime } = request.query;
 
-    // SE tag é uguale a undefined vuol dire che nella query non c'e, non sto cercando 
-    // nulla: quindi passiamo tutta la lista e adios
-    if (tag === undefined) {
-        response.json(posts);
-        return; // Ci fermiamo qui
-    };
+    const maxPrepTimeReal = parseInt(maxPrepTime); // converto d stringa a intero
 
+    let postsFiltered = posts
     // altrimenti parte tutto il mio viaggione
 
     const realTag = tag.trim().toLowerCase(); // puliamo la query
 
-    const postsFiltered = posts.filter(post => {
-        // cicliamo l`array dei tag dentro il post (!!!) e restituiamo 
-        // tutti i current che mtchano il tag, anche parzialmente
-        for (let i = 0; i < post.tags.length; i++) {
-            const currentTag = post.tags[i].toLowerCase();
-            if (currentTag.includes(realTag)) {
-                return true;
-            };
-        }
-        return false;
-    });
+    if (tag !== undefined) {
+        postsFiltered = postsFiltered.filter(post => {
+            // cicliamo l`array dei tag dentro il post (!!!) e restituiamo 
+            // tutti i current che mtchano il tag, anche parzialmente
+
+            for (let i = 0; i < post.tags.length; i++) {
+                const currentTag = post.tags[i].toLowerCase();
+                if (currentTag.includes(realTag)) {
+                    return true;
+                };
+            }
+            return false;
+        });
+    }
+
+    if (!isNaN(maxPrepTimeReal)) {
+        postsFiltered = postsFiltered.filter( post => {
+            // Teniamo il post solo se il suo tempo è INFERIORE o UGUALE al massimo richiesto
+            return post.prep_time <= maxPrepTimeReal;
+        });
+    }
     response.json(postsFiltered)
-};
+}
 
 // function logic per show route
 
