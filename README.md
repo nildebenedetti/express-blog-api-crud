@@ -1,43 +1,49 @@
-# Esercizio su NodeJS Routes
+# Esercizio su NodeJS CRUDS
 
-Potete partire dall'esercizio di ieri oppure, come consigliato rifare tutto fa capo per capire se siamo abbastanza abili a creare un progetto NodeJS.
+Esercizio
+Milestone 1
 
-1. Fare lo scaffolding delle cartelle:
-routers per le Rotte delle nostra risorse
-controllers che conterra le funzioni di risoluzione delle varie rotte
+Mettete il file posts, quello in allegato (è diverso da quello di ieri, sono stati aggiunti dei parametri) nella cartella data
 
-2. Creare un file di routing (routers/posts.js) che conterrà le rotte necessario per l'entità post.
+Assicuriamoci di aver creato le cartelle:
+controllers per i controllers definiti nel nostro progetto.
+routers con il nostro instradatore per i post.
 
-All'interno creare le rotte per le operazioni CRUD (Index, Show, Create, Update e Delete)
+Milestone 2
 
-Tutte le risposte saranno dei testi (in formato JSON) che confermeranno l’operazione che il server deve eseguire, secondo le convenzioni REST.
+Continuiamo le logiche delle nostre CRUD:
 
-Ad esempio: 
+Index dovrà restituire la lista dei post in formato JSON (controllare se gli status HTTP restituito sono corretti)
+Show dovrà restituire un singolo post in formato JSON (stessa cosa per gli stati)
+Destroy dovrà eliminare un singolo post dalla lista (dopo aver ovviamente controllato l'esistenza). Stampatevi in console il menu dopo la rimozione, cosi da assicurarvi che il post è stato rimosso.
 
-Se viene chiamata /posts col verbo GET ci aspettiamo per esempio
+Testate su Postman i vari casi limite (valori errati, id negativi, id non presenti ecc...)
+
+Bonus
+Implementare almeno 2 filtri nella rotta index per permettere di effettuare delle ricerche o dei filtri nei campi (avete tanti parametri su cui applicare delle ricerche).
+Testare con Postman la correttezza dei filtri inseriti
+
+Super Bonus
+Importare uno dei due middleware nel file server.js
+
+app.use(express.urlencoded()); // Utile per le richieste application/x-www-form-urlencoded
+
+o
+app.use(express.json()); // Utile per le richieste application/json
+
+
+Modificare la rotta Create per leggere i dati contenuti in request.body e stamparli in console.
+Testare l'invio dei dati tramite Postman inviado i dati nel formato che abbiamo importato
+Restituire nella risposta i soliti campi passati nella richiesta di creare (echo-back)
+
+Esempio risposta:
+
 {
-  messagge: "Lista dei post"
+    "messaggio": "Stai provando a creare dei dati",
+    "dati": {
+        "title": "...",
+        "content": "...",
+        ...
+
+    }
 }
-
-Se viene chiamato /posts/1 col verbo DELETE ci aspettiamo per esempio
-{
-  messagge: “Cancellazione del post 1”
-}
-
-
-e via dicendo…
-
-Registrare il router dentro app.js con il prefisso posts/.
-
-Nota:
-
-Avete anche l’array dei post che vi abbiamo fornito, salvatelo da qualche parte.
-Ci servirà per i prossimi step.
-Per oggi vi può servire in caso vogliate provare i bonus.
-
-## Bonus
-Provare a restituire la lista dei post dalla rotta index, in formato json
-Provare a restituire un singolo post dalla rotta show, sempre in formato json con i controlli in caso l'utente inserisca dei dati non corretti
-
-## Super Bonus
-Fare una rotta che invia una mail, come nell'esempio visto a lezione e inziare a spammare le il mondo 😈 
