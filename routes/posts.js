@@ -1,6 +1,6 @@
 import express from 'express';
 import { error } from 'node:console';
-import { index, show, put, patch, create, deleteFn } from '../controllers/posts.js';
+import { index, show, put, patch, create, deleteFn as destroy } from '../controllers/posts.js';
 
 // file di routing con le rotte per la entity posts:
 // Operazioni CRUD: Index, Show, Update, Create
@@ -27,6 +27,6 @@ router.patch('/posts/:id', patch)
 
 // delete - DELETE http://localhost:3000/posts/:id
 
-router.delete('/posts/:id', deleteFn);
+router.delete('/posts/:id', destroy);
 
 export default router;
