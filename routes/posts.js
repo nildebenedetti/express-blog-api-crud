@@ -9,9 +9,9 @@ const router = express.Router();
 
 // index - GET  http://localhost:3000
 
-router.get('/posts', index);
+router.get('/', index);
 
-// show -  GET  http://localhost:3000/:id
+// show -  GET  http://localhost:3000/posts/:id
 
 router.get('/posts/:id', show);
 
@@ -19,13 +19,13 @@ router.get('/posts/:id', show);
 
 router.post('posts/', create)
 
-// update - PUT || PATCH http://localhost:3000/:id
+// update - PUT || PATCH http://localhost:3000/posts/:id
 
 router.put('/posts/:id', put)
 
 router.patch('/posts/:id', patch)
 
-// delete - DELETE http://localhost:3000/:id
+// delete - DELETE http://localhost:3000/posts/:id
 
 router.delete('/posts/:id', deleteFn);
 
