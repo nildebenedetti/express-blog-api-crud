@@ -1,0 +1,157 @@
+import { posts } from '../contents/posts.js';
+
+// function logic per index route 
+
+function index(request, response) {
+    response.json(posts);
+};
+
+// function logic per show route
+
+function show(request, response) {
+    const { id } = request.params; // destructuring di id da parametri della callback response
+
+    const realId = Number(id.trim()); // normalizzo id a numero
+
+    // se líd ricevuto e numberizzato non è un numero
+    // allora response.status(404)
+    // e restituiamo un json con errore esplicativo ID NON CORRETTO
+    // concludo con early return
+    // se id negativo
+    // allora response.status(404)
+    // e restituiamo un json con errore esplicativo ID Negativo
+    // altrimenti FACCIO LA FIND su posts
+    // se il risultato è undefined lancio errore: id non presente
+    // se trovato, la mia response saara'un json con object: post e msg: post trovato con successo
+
+    if (isNaN(realId)) {
+        response.status(404)
+            .json({
+                error: 'Id non corretto: inserire un numero!'
+            })
+        return;
+    } else if (realId <= 0) {
+        response.status(404)
+            .json({
+                error: 'ripigliati... hai inserito un valore negativo'
+            })
+        return;
+    }
+    const postFound = posts.find(post => {
+        return post.id === realId;
+    });
+    response.json({
+        error: 'nessun errore!',
+        content: postFound
+    })
+    return;
+};
+
+// function logic per create route
+
+
+function create(request, response) {
+    response.json({
+        message: 'creato un nuovo post!'
+    })
+
+};
+
+// function logic per put route
+
+function put(request, response) {
+    const { id } = request.params; // destructuring di id da parametri della callback response
+
+    const realId = Number(id.trim()); // normalizzo id a numero
+
+    if (isNaN(realId)) {
+        response.status(404)
+            .json({
+                error: 'Id non corretto: inserire un numero!'
+            })
+        return;
+    } else if (realId <= 0) {
+        response.status(404)
+            .json({
+                error: 'ripigliati... hai inserito un valore negativo'
+            })
+        return;
+    }
+    const postFound = posts.find(post => {
+        return post.id === realId;
+    });
+    response.json({
+        message: `modificati tutti i campi di post!`,
+        response: postFound
+    });
+
+};
+
+// function logic per path
+
+function patch(request, response) {
+    const { id } = request.params; // destructuring di id da parametri della callback response
+
+    const realId = Number(id.trim()); // normalizzo id a numero
+
+    if (isNaN(realId)) {
+        response.status(404)
+            .json({
+                error: 'Id non corretto: inserire un numero!'
+            })
+        return;
+    } else if (realId <= 0) {
+        response.status(404)
+            .json({
+                error: 'ripigliati... hai inserito un valore negativo'
+            })
+        return;
+    }
+    const postFound = posts.find(post => {
+        return post.id === realId;
+    });
+    response.json({
+        message: `modificato il campo richiesto per il post!`,
+        response: postFound
+    });
+
+};
+
+// function logic per delete route
+
+function deleteFn(request, response) {
+    const { id } = request.params; // destructuring di id da parametri della callback response
+
+    const realId = Number(id.trim()); // normalizzo id a numero
+
+    if (isNaN(realId)) {
+        response.status(404)
+            .json({
+                error: 'Id non corretto: inserire un numero!'
+            })
+        return;
+    } else if (realId <= 0) {
+        response.status(404)
+            .json({
+                error: 'ripigliati... hai inserito un valore negativo'
+            })
+        return;
+    }
+    const postFound = posts.find(post => {
+        return post.id === realId;
+    });
+    response.json({
+        message: `cancellato il post... digli addio per l'ultima volta`,
+        response: postFound
+    });
+
+};
+
+export {
+    index,
+    show,
+    put,
+    patch,
+    create,
+    deleteFn
+};
