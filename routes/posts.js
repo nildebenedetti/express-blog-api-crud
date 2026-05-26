@@ -23,7 +23,6 @@ router.post('/posts/', create)
 
 router.put('/posts/:id', put)
 
-router.patch('/posts/:id', patch)
 
 // delete - DELETE http://localhost:3000/posts/:id
 
