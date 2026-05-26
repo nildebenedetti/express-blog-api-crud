@@ -91,10 +91,14 @@ function show(request, response) {
 
 
 function create(request, response) {
-    response.json({
-        message: 'creato un nuovo post!'
-    })
+    const newPost = request.body;
+    console.log("Dati ricevuti da User", newPost);
 
+    response.status(201).json({
+        success:true,
+        message:'test post eseguito con successo!',
+        data:newPost
+    })
 };
 
 // function logic per put route
