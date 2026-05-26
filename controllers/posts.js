@@ -32,7 +32,7 @@ function index(request, response) {
     }
 
     if (!isNaN(maxPrepTimeReal)) {
-        postsFiltered = postsFiltered.filter( post => {
+        postsFiltered = postsFiltered.filter(post => {
             // Teniamo il post solo se il suo tempo è INFERIORE o UGUALE al massimo richiesto
             return post.prep_time <= maxPrepTimeReal;
         });
@@ -92,18 +92,86 @@ function show(request, response) {
 
 function create(request, response) {
     // prendo quello che ci serve per creare il post da dati utente
-    const { title, content, image, tags, prep_time } = request.body;
+    let body = request.body;
+    const { title, content, image, tags, prep_time, published } = body;
+    const realPrepTime = Number(prep_time);
+    const realTitle = title.trim(); // titolo nazista
+    const realContent = content.trim();
 
     // validazioni
+    // PREP TIME deve essere un numero positivo 
+    if (isNaN(realPrepTime)) {
+        response.status(400)
+            .json({
+                error: 'Prep_time non corretto: inserire un numero!'
+            })
+        return;
+    } else if (realPrepTime <= 0) {
+        response.status(400)
+            .json({
+                error: 'ripigliati... hai inserito un valore negativo'
+            });
+        return;
+    }
+    // TITLE obbligatorio e 
+    // deve essere tra i 4 e i 50 caratteri
+    if (realTitle  === '') {
+        response.status(400)
+            .json({
+                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
+            });
+            return;
+    } else if (realTitle.length < 4 || realTitle.length > 50) {
+        response.status(400)
+            .json({
+                error: 'il titolo deve essere tra i 4 e i 50 caratteri spazi inclusi'
+            });
+        return;
+    };
+    // CONTENT obbligatorio e
+    // deve essere tra i 250 e gli 800 caratteri 
+    if (realContent === '') {
+        response.status(400)
+            .json({
+                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
+            });
+            return;
+    } else if (realContent.length < 250 || realContent.length > 800) {
+        response.status(400)
+            .json({
+                error: 'il campo content deve avere una lunghezza minima di 250 caratteri e una massima di 800, spazi inclusi.'
+            });
+        return;
+    };
+    // tags deve essere un array di stringhe
+    if (!Array.isArray(tags) || tags.length === 0 || tags.some(tag => {
+        return typeof tag !== 'string'
+    })) {
+        response.status(400)
+        .json({
+            error: 'il campo tags deve essere un array di stringhe, non vuoto'
+        });
+        return;
+    }
+
+    // published deve essere boolean
+    if (typeof published !== 'boolean') {
+        response.status(400)
+        .json({
+            error: "published deve corrispondere obbligatoriamente a 'true' oppure 'false'"
+        });
+        return;
+    }
+
 
     // mi creo il mio oggetto
     const newPost = {
         id: idProgressiveEnumerator(posts),
         title,
-        slug:'',
+        slug: '',
         content,
         image: null,
-        published: true,
+        published,
         tags,
         prep_time,
         created_at: generateCurrentTime() // me lo ignora a piedi pari
@@ -112,10 +180,13 @@ function create(request, response) {
     const newPostSlug = craftSlug(newPost, posts);
     newPost.slug = newPostSlug;
 
+    posts.push(newPost);
+
+
     response.status(201).json({
-        success:true,
-        message:'test post eseguito con successo!',
-        data:newPost
+        success: true,
+        message: 'test post eseguito con successo!',
+        data: newPost
     })
 };
 
