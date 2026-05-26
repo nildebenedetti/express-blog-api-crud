@@ -6,9 +6,7 @@ const idProgressiveEnumerator = () => {
     return lastPostId + 1;
 };
 
-export {
-    idProgressiveEnumerator
-};
+
 
 //creazione slug da name + validazione duplicati
 const craftSlug = (post) => {
@@ -45,3 +43,8 @@ const craftSlug = (post) => {
 
     return finalSlug; // RESTITUISCI LO SLUG + "-increment"
 }
+
+export {
+    idProgressiveEnumerator,
+    craftSlug
+};

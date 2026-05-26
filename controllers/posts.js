@@ -1,5 +1,5 @@
 import { posts } from '../contents/posts.js';
-import { idProgressiveEnumerator } from '../utils/postTools.js';
+import { idProgressiveEnumerator, craftSlug } from '../utils/postTools.js';
 
 // function logic per index route 
 
