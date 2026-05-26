@@ -17,8 +17,11 @@ const craftSlug = (post) => {
     // creiamo la slug e la facciamo con un replace all spazio vs -
     // togliamo tutti i caratteri speciali ???
     const postTitle = post.title; 
-    let slug =postTitle.replace(/[^a-zA-Z0-9\s]/g, '') // buongiorno RegEx potentissimaaa
-    slug = postTitle.replaceAll(" ", "-");
+    let slug =postTitle
+    .trim() // rimuove spazi iniziali o finali
+    .toLowerCase() // rende in minuscolo
+    .replace(/[^a-zA-Z0-9\s]/g, '') // buongiorno RegEx potentissimaaa
+    .replaceAll(" ", "-");
 
     return slug;
 }
