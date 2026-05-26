@@ -1,3 +1,5 @@
+
+// creazione id progressivo
 const idProgressiveEnumerator = () => {
     const lastPost = posts[posts.length - 1];
     const lastPostId = lastPost.id;
@@ -7,3 +9,16 @@ const idProgressiveEnumerator = () => {
 export {
     idProgressiveEnumerator
 };
+
+//creazione slug da name + validazione duplicati
+// N.B: nelle validazioni vedi di trimmare il title!!!
+const craftSlug = (post) => {
+    // prendiamo il nome del post da post
+    // creiamo la slug e la facciamo con un replace all spazio vs -
+    // togliamo tutti i caratteri speciali ???
+    const postTitle = post.title; 
+    let slug =postTitle.replace(/[^a-zA-Z0-9\s]/g, '') // buongiorno RegEx potentissimaaa
+    slug = postTitle.replaceAll(" ", "-");
+
+    return slug;
+}
