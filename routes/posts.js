@@ -17,7 +17,7 @@ router.get('/posts/:id', show);
 
 // create - POST http://localhost:3000
 
-router.post('posts/', create)
+router.post('/posts/', create)
 
 // update - PUT || PATCH http://localhost:3000/posts/:id
 
