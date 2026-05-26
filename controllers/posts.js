@@ -129,17 +129,17 @@ function create(request, response) {
         return;
     };
     // CONTENT obbligatorio e
-    // deve essere tra i 250 e gli 800 caratteri 
+    // deve essere tra i 150 e gli 800 caratteri 
     if (realContent === '') {
         response.status(400)
             .json({
                 error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
             });
             return;
-    } else if (realContent.length < 250 || realContent.length > 800) {
+    } else if (realContent.length < 150 || realContent.length > 800) {
         response.status(400)
             .json({
-                error: 'il campo content deve avere una lunghezza minima di 250 caratteri e una massima di 800, spazi inclusi.'
+                error: 'il campo content deve avere una lunghezza minima di 150 caratteri e una massima di 800, spazi inclusi.'
             });
         return;
     };
@@ -216,46 +216,103 @@ function put(request, response) {
     if (!postFound) {
         response.status(404).json({
             error: `post con id ${realId} non trovato`
-        })
+        });
+        return;
     }
-    response.json({
-        message: `modificati tutti i campi di post!`,
-        response: postFound
-    });
 
-};
+    let body = request.body;
+    const { title, content, image, tags, prep_time, published } = body;
+    const realPrepTime = Number(prep_time);
+    const realTitle = title.trim(); // titolo nazista
+    const realContent = content.trim();
 
-// function logic per path
-
-function patch(request, response) {
-    const { id } = request.params; // destructuring di id da parametri della callback response
-
-    const realId = Number(id.trim()); // normalizzo id a numero
-
-    if (isNaN(realId)) {
+    // validazioni
+    // PREP TIME deve essere un numero positivo 
+    if (isNaN(realPrepTime)) {
         response.status(400)
             .json({
-                error: 'Id non corretto: inserire un numero!'
+                error: 'Prep_time non corretto: inserire un numero!'
             })
         return;
-    } else if (realId <= 0) {
+    } else if (realPrepTime <= 0) {
         response.status(400)
             .json({
                 error: 'ripigliati... hai inserito un valore negativo'
-            })
+            });
         return;
     }
-    const postFound = posts.find(post => {
-        return post.id === realId;
-    });
-    if (!postFound) {
-        response.status(404).json({
-            error: `post con id ${realId} non trovato`
-        })
+    // TITLE obbligatorio e 
+    // deve essere tra i 4 e i 50 caratteri
+    if (realTitle  === '') {
+        response.status(400)
+            .json({
+                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
+            });
+            return;
+    } else if (realTitle.length < 4 || realTitle.length > 50) {
+        response.status(400)
+            .json({
+                error: 'il titolo deve essere tra i 4 e i 50 caratteri spazi inclusi'
+            });
+        return;
+    };
+    // CONTENT obbligatorio e
+    // deve essere tra i 150 e gli 800 caratteri 
+    if (realContent === '') {
+        response.status(400)
+            .json({
+                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
+            });
+            return;
+    } else if (realContent.length < 150 || realContent.length > 800) {
+        response.status(400)
+            .json({
+                error: 'il campo content deve avere una lunghezza minima di 150 caratteri e una massima di 800, spazi inclusi.'
+            });
+        return;
+    };
+    // tags deve essere un array di stringhe
+    if (!Array.isArray(tags) || tags.length === 0 || tags.some(tag => {
+        return typeof tag !== 'string'
+    })) {
+        response.status(400)
+        .json({
+            error: 'il campo tags deve essere un array di stringhe, non vuoto'
+        });
+        return;
     }
-    response.json({
-        message: `modificato il campo richiesto per il post!`,
-        response: postFound
+
+    // published deve essere boolean
+    if (typeof published !== 'boolean') {
+        response.status(400)
+        .json({
+            error: "published deve corrispondere obbligatoriamente a 'true' oppure 'false'"
+        });
+        return;
+    }
+
+
+    // mi creo il mio oggetto
+    const postFoundIndex = posts.indexOf(postFound);
+
+    const postOld = posts[postFoundIndex];
+
+    const postUpdated = {
+        ...postOld,       // Tiene l'id, lo slug vecchio e la data di creazione
+        title: realTitle,
+        content: realContent,
+        image: null,
+        tags: tags,
+        prep_time: realPrepTime,
+        published: published
+    };
+
+    posts.splice(postFoundIndex, 1, postUpdated);
+
+    response.status(200)
+    .json({
+        message: `modificati tutti i campi!`,
+        response: postUpdated
     });
 
 };
