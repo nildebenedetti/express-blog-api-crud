@@ -4,6 +4,9 @@ import { sendMail } from './utils/mailSender.js';
 
 const app = express();
 
+// Impostiamo il body-parser per far sì che la nostra app riesca a decifrare il request body
+app.use(express.json());
+
 // assegnamo a port valore dalla varibabile presente in .env per oscurare il file
 const PORT = process.env.PORT || 3000;
 
