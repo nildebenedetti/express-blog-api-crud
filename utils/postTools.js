@@ -1,7 +1,7 @@
 
 // creazione id progressivo
-const idProgressiveEnumerator = () => {
-    const lastPost = posts[posts.length - 1];
+const idProgressiveEnumerator = (postArray) => {
+    const lastPost = postArray[postArray.length - 1];
     const lastPostId = lastPost.id;
     return lastPostId + 1;
 };
@@ -9,7 +9,7 @@ const idProgressiveEnumerator = () => {
 
 
 //creazione slug da name + validazione duplicati
-const craftSlug = (post) => {
+const craftSlug = (post, postArray) => {
     // prendiamo il nome del post da post
     // creiamo la slug e la facciamo con un replace all spazio vs -
     // togliamo tutti i caratteri speciali ???
@@ -34,7 +34,7 @@ const craftSlug = (post) => {
 
         // CERCA SE c`è uno slug uguale a questo,
             // SE C'É increment++
-        postwithSameSlug = posts.find(post => {
+        postwithSameSlug = postArray.find(post => {
             return post.slug === finalSlug;
         });
 
@@ -44,7 +44,15 @@ const craftSlug = (post) => {
     return finalSlug; // RESTITUISCI LO SLUG + "-increment"
 }
 
+// generare data e ora di pubblicazione
+const generateCurrentTime = () => {
+    const currentTime = new Date();
+    return currentTime.toISOString;
+};
+
 export {
     idProgressiveEnumerator,
-    craftSlug
+    craftSlug,
+    generateCurrentTime
 };
+

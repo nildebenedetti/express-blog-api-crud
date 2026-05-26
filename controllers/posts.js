@@ -1,5 +1,5 @@
 import { posts } from '../contents/posts.js';
-import { idProgressiveEnumerator, craftSlug } from '../utils/postTools.js';
+import { idProgressiveEnumerator, craftSlug, generateCurrentTime } from '../utils/postTools.js';
 
 // function logic per index route 
 
@@ -90,10 +90,27 @@ function show(request, response) {
 
 // function logic per create route
 
-
 function create(request, response) {
-    const newPost = request.body;
-    console.log("Dati ricevuti da User", newPost);
+    // prendo quello che ci serve per creare il post da dati utente
+    const { title, content, image, tags, prep_time } = request.body;
+
+    // validazioni
+
+    // mi creo il mio oggetto
+    const newPost = {
+        id: idProgressiveEnumerator(posts),
+        title,
+        slug:'',
+        content,
+        image: null,
+        published: true,
+        tags,
+        prep_time,
+        created_at: generateCurrentTime() // me lo ignora a piedi pari
+    }
+
+    const newPostSlug = craftSlug(newPost, posts);
+    newPost.slug = newPostSlug;
 
     response.status(201).json({
         success:true,
