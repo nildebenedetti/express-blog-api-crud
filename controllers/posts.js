@@ -80,6 +80,7 @@ function show(request, response) {
         response.status(404).json({
             error: `post con id ${realId} non trovato`
         })
+        return;
     }
     response.json({
         error: 'nessun errore!',
@@ -167,9 +168,9 @@ function create(request, response) {
     // mi creo il mio oggetto
     const newPost = {
         id: idProgressiveEnumerator(posts),
-        title,
+        realTitle,
         slug: '',
-        content,
+        realContent,
         image: null,
         published,
         tags,
@@ -315,7 +316,7 @@ function put(request, response) {
         response: postUpdated
     });
 
-};
+}
 
 // function logic per delete route
 
@@ -357,7 +358,6 @@ export {
     index,
     show,
     put,
-    patch,
     create,
     destroy
 };
