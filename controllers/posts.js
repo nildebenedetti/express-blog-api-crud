@@ -145,10 +145,10 @@ function create(request, response) {
         published,
         tags,
         prep_time,
-        created_at: generateCurrentTime() // me lo ignora a piedi pari
+        created_at: generateCurrentTime()
     }
 
-    const newPostSlug = craftSlug(newPost, posts);
+    const newPostSlug = craftSlug(body, posts);
     newPost.slug = newPostSlug;
 
     posts.push(newPost);
@@ -178,8 +178,23 @@ function put(request, response) {
     let body = request.body;
     const { title, content, image, tags, prep_time, published } = body;
     const realPrepTime = Number(prep_time);
-    const realTitle = title.trim(); // titolo nazista
     const realContent = content.trim();
+        const realTitle = title.trim(); // titolo nazista
+    // TITLE obbligatorio e 
+    // deve essere tra i 4 e i 50 caratteri
+    if (realTitle === '') {
+        response.status(400)
+            .json({
+                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
+            });
+        return;
+    } else if (realTitle.length < 4 || realTitle.length > 50) {
+        response.status(400)
+            .json({
+                error: 'il titolo deve essere tra i 4 e i 50 caratteri spazi inclusi'
+            });
+        return;
+    };
 
     // validazioni
     // PREP TIME deve essere un numero positivo 
@@ -196,21 +211,6 @@ function put(request, response) {
             });
         return;
     }
-    // TITLE obbligatorio e 
-    // deve essere tra i 4 e i 50 caratteri
-    if (realTitle  === '') {
-        response.status(400)
-            .json({
-                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
-            });
-            return;
-    } else if (realTitle.length < 4 || realTitle.length > 50) {
-        response.status(400)
-            .json({
-                error: 'il titolo deve essere tra i 4 e i 50 caratteri spazi inclusi'
-            });
-        return;
-    };
     // CONTENT obbligatorio e
     // deve essere tra i 150 e gli 800 caratteri 
     if (realContent === '') {
