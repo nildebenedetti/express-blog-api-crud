@@ -58,20 +58,6 @@ function show(request, response) {
     // se il risultato è undefined lancio errore 404: id non presente
     // se trovato, la mia response saara'un json con object: post e msg: post trovato con successo
 
-    if (isNaN(realId)) {
-        response.status(400)
-            .json({
-                error: 'Id non corretto: inserire un numero!'
-            })
-        return;
-    } else if (realId <= 0) {
-        response.status(400)
-            .json({
-                error: 'ripigliati... hai inserito un valore negativo'
-            })
-        return;
-    }
-
     const postFound = posts.find(post => {
         return post.id === realId;
     });
@@ -194,23 +180,6 @@ function create(request, response) {
 // function logic per put route
 
 function put(request, response) {
-    const { id } = request.params; // destructuring di id da parametri della callback response
-
-    const realId = Number(id.trim()); // normalizzo id a numero
-
-    if (isNaN(realId)) {
-        response.status(400)
-            .json({
-                error: 'Id non corretto: inserire un numero!'
-            })
-        return;
-    } else if (realId <= 0) {
-        response.status(400)
-            .json({
-                error: 'ripigliati... hai inserito un valore negativo'
-            })
-        return;
-    }
     const postFound = posts.find(post => {
         return post.id === realId;
     });
@@ -321,23 +290,6 @@ function put(request, response) {
 // function logic per delete route
 
 function destroy(request, response) {
-    const { id } = request.params; // destructuring di id da parametri della callback response
-
-    const realId = Number(id.trim()); // normalizzo id a numero
-
-    if (isNaN(realId)) {
-        response.status(400)
-            .json({
-                error: 'Id non corretto: inserire un numero!'
-            })
-        return;
-    } else if (realId <= 0) {
-        response.status(400)
-            .json({
-                error: 'ripigliati... hai inserito un valore negativo'
-            })
-        return;
-    }
     // facciamo con la findIndex: se lo trova restituisce indice di id, altrimenti -1
     // se trovato, faccimo la splice
     //se non trovato lanciamo 404
