@@ -9,11 +9,11 @@ const idProgressiveEnumerator = (postArray) => {
 
 
 //creazione slug da name + validazione duplicati
-const craftSlug = (post, postArray) => {
+const craftSlug = (reqBody, postArray) => {
     // prendiamo il nome del post da post
     // creiamo la slug e la facciamo con un replace all spazio vs -
     // togliamo tutti i caratteri speciali ???
-    const postTitle = post.title; 
+    const postTitle = reqBody.title; 
     let slug = postTitle
     .trim() // rimuove spazi iniziali o finali
     .toLowerCase() // rende in minuscolo
