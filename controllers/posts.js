@@ -24,7 +24,6 @@ function index(request, response) {
         postsFiltered = postsFiltered.filter(post => {
             // cicliamo l`array dei tag dentro il post (!!!) e restituiamo 
             // tutti i current che mtchano il tag, anche parzialmente
-
             for (let i = 0; i < post.tags.length; i++) {
                 const currentTag = post.tags[i].toLowerCase();
                 if (currentTag.includes(realTag)) {
@@ -85,20 +84,6 @@ function create(request, response) {
     // prendo quello che ci serve per creare il post da dati utente
     let body = request.body;
     const { image, tags, published } = body;
-    
-    // tags deve essere un array di stringhe
-    if (!Array.isArray(tags) || tags.length === 0 || tags.some(tag => {
-        return typeof tag !== 'string'
-    })) {
-        response.status(400)
-        .json({
-            error: 'il campo tags deve essere un array di stringhe, non vuoto'
-        });
-        return;
-    }
-
-
-
     // mi creo il mio oggetto
     const newPost = {
         id: idProgressiveEnumerator(posts),
@@ -117,7 +102,6 @@ function create(request, response) {
 
     posts.push(newPost);
 
-
     response.status(201).json({
         success: true,
         message: 'test post eseguito con successo!',
@@ -128,79 +112,22 @@ function create(request, response) {
 // function logic per put route
 
 function put(request, response) {
-    const realId = request.realId; //recupero realId da middleware verificaId
+    let body = request.body;
+    const { tags, prep_time, published } = request.body;
+    const cleanId = request.realId; //recupero realId da middleware verificaId
+    const cleanContent = request.realContent;
+    const cleanTitle = request.realTitle;
+    const cleanPrepTime = request.realPrepTime;
+
     const postFound = posts.find(post => {
-        return post.id === realId;
+        return post.id === cleanId;
     });
     if (!postFound) {
         response.status(404).json({
-            error: `post con id ${realId} non trovato`
+            error: `post con id ${cleanId} non trovato`
         });
         return;
     }
-
-    let body = request.body;
-    const { title, content, image, tags, prep_time, published } = body;
-    const realPrepTime = Number(prep_time);
-    const realContent = content.trim();
-        const realTitle = title.trim(); // titolo nazista
-    // TITLE obbligatorio e 
-    // deve essere tra i 4 e i 50 caratteri
-    if (realTitle === '') {
-        response.status(400)
-            .json({
-                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
-            });
-        return;
-    } else if (realTitle.length < 4 || realTitle.length > 50) {
-        response.status(400)
-            .json({
-                error: 'il titolo deve essere tra i 4 e i 50 caratteri spazi inclusi'
-            });
-        return;
-    };
-
-    // validazioni
-    // PREP TIME deve essere un numero positivo 
-    if (isNaN(realPrepTime)) {
-        response.status(400)
-            .json({
-                error: 'Prep_time non corretto: inserire un numero!'
-            })
-        return;
-    } else if (realPrepTime <= 0) {
-        response.status(400)
-            .json({
-                error: 'ripigliati... hai inserito un valore negativo'
-            });
-        return;
-    }
-    // CONTENT obbligatorio e
-    // deve essere tra i 150 e gli 800 caratteri 
-    if (realContent === '') {
-        response.status(400)
-            .json({
-                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
-            });
-            return;
-    } else if (realContent.length < 150 || realContent.length > 800) {
-        response.status(400)
-            .json({
-                error: 'il campo content deve avere una lunghezza minima di 150 caratteri e una massima di 800, spazi inclusi.'
-            });
-        return;
-    };
-    // tags deve essere un array di stringhe
-    if (!Array.isArray(tags) || tags.length === 0 || tags.some(tag => {
-        return typeof tag !== 'string'
-    })) {
-        response.status(400)
-        .json({
-            error: 'il campo tags deve essere un array di stringhe, non vuoto'
-        });
-        return;
-    }
-
 
     // mi creo il mio oggetto
     const postFoundIndex = posts.indexOf(postFound);
@@ -208,22 +135,25 @@ function put(request, response) {
     const postOld = posts[postFoundIndex];
 
     const postUpdated = {
-        ...postOld,       // Tiene l'id, lo slug vecchio e la data di creazione
-        title: realTitle,
-        content: realContent,
+        id:postOld.id,
+        slug: postOld.slug,
+        created_at:postOld.created_at,
+        image: postOld.image,   // Tiene l'id, lo slug vecchio e la data di creazione
+        title: cleanTitle,
+        content: cleanContent,
         image: null,
         tags: tags,
-        prep_time: realPrepTime,
+        prep_time: cleanPrepTime,
         published: published
     };
 
     posts.splice(postFoundIndex, 1, postUpdated);
 
     response.status(200)
-    .json({
-        message: `modificati tutti i campi!`,
-        response: postUpdated
-    });
+        .json({
+            message: `modificati tutti i campi!`,
+            response: postUpdated
+        });
 
 }
 

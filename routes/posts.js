@@ -27,7 +27,7 @@ router.post('/posts/', [validateTitle, validateContent, validatePrepTime, valida
 
 // update - PUT || PATCH http://localhost:3000/posts/:id
 
-router.put('/posts/:id', [validateId, validatePublish, validateTags, put])
+router.put('/posts/:id', [validateId, validatePublish, validateTags, validateTitle, validateContent, put])
 
 
 // delete - DELETE http://localhost:3000/posts/:id
