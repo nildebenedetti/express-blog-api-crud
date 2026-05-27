@@ -1,6 +1,8 @@
 import express from 'express';
 import posts from './routes/posts.js';
 import { sendMail } from './utils/mailSender.js';
+import errorHandler from './middlewares/errorHandler.js';
+import notFound from './middlewares/notFound.js';
 
 const app = express();
 
@@ -33,6 +35,11 @@ app.get('/send-mail', (request, response) => {
         response.status(500).json({ errore: 'Errore nell invio della mail' });
     }); 
 });
+
+// add middleware errore e notfound, appena sotto router e sopra listen
+
+app.use(errorHandler)
+app.use(notFound);
 
 // ---- avvio del server ---
 app.listen(PORT, (error) => {
