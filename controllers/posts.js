@@ -3,6 +3,8 @@ import { idProgressiveEnumerator, craftSlug, generateCurrentTime } from '../util
 import validateId from '../middlewares/validateId.js';
 import validateTitle from '../middlewares/validateTitle.js';
 import validateContent from '../middlewares/validateContent.js';
+import validatePrepTime from '../middlewares/validatePrepTime.js';
+
 // function logic per index route 
 
 function index(request, response) {
@@ -79,25 +81,11 @@ function show(request, response) {
 function create(request, response) {
     const realTitle = request.realTitle;
     const realContent = request.realContent;
+    const realPrepTime = request.realPrepTime;
     // prendo quello che ci serve per creare il post da dati utente
     let body = request.body;
-    const { image, tags, prep_time, published } = body;
-    const realPrepTime = Number(prep_time);
-    // validazioni
-    // PREP TIME deve essere un numero positivo 
-    if (isNaN(realPrepTime)) {
-        response.status(400)
-            .json({
-                error: 'Prep_time non corretto: inserire un numero!'
-            })
-        return;
-    } else if (realPrepTime <= 0) {
-        response.status(400)
-            .json({
-                error: 'ripigliati... hai inserito un valore negativo'
-            });
-        return;
-    };
+    const { image, tags, published } = body;
+    
     // tags deve essere un array di stringhe
     if (!Array.isArray(tags) || tags.length === 0 || tags.some(tag => {
         return typeof tag !== 'string'
@@ -127,7 +115,7 @@ function create(request, response) {
         image: null,
         published,
         tags,
-        prep_time,
+        realPrepTime,
         created_at: generateCurrentTime()
     }
 
