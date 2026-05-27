@@ -3,6 +3,7 @@ import { error } from 'node:console';
 import { index, show, put, create, destroy } from '../controllers/posts.js';
 import validateId from '../middlewares/validateId.js';
 import validateTitle from '../middlewares/validateTitle.js';
+import validateContent from '../middlewares/validateContent.js';
 
 // file di routing con le rotte per la entity posts:
 // Operazioni CRUD: Index, Show, Update, Create
@@ -19,7 +20,7 @@ router.get('/posts/:id', [validateId, show]);
 
 // create - POST http://localhost:3000
 
-router.post('/posts/', [validateTitle, create]);
+router.post('/posts/', [validateTitle, validateContent, create]);
 
 // update - PUT || PATCH http://localhost:3000/posts/:id
 

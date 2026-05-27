@@ -2,6 +2,7 @@ import { posts } from '../contents/posts.js';
 import { idProgressiveEnumerator, craftSlug, generateCurrentTime } from '../utils/postTools.js';
 import validateId from '../middlewares/validateId.js';
 import validateTitle from '../middlewares/validateTitle.js';
+import validateContent from '../middlewares/validateContent.js';
 // function logic per index route 
 
 function index(request, response) {
@@ -77,12 +78,11 @@ function show(request, response) {
 
 function create(request, response) {
     const realTitle = request.realTitle;
+    const realContent = request.realContent;
     // prendo quello che ci serve per creare il post da dati utente
     let body = request.body;
-    const { content, image, tags, prep_time, published } = body;
+    const { image, tags, prep_time, published } = body;
     const realPrepTime = Number(prep_time);
-    const realContent = content.trim();
-
     // validazioni
     // PREP TIME deve essere un numero positivo 
     if (isNaN(realPrepTime)) {
@@ -97,22 +97,6 @@ function create(request, response) {
                 error: 'ripigliati... hai inserito un valore negativo'
             });
         return;
-    }
-    
-    // CONTENT obbligatorio e
-    // deve essere tra i 150 e gli 800 caratteri 
-    if (realContent === '') {
-        response.status(400)
-            .json({
-                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
-            });
-            return;
-    } else if (realContent.length < 150 || realContent.length > 800) {
-        response.status(400)
-            .json({
-                error: 'il campo content deve avere una lunghezza minima di 150 caratteri e una massima di 800, spazi inclusi.'
-            });
-        return;
     };
     // tags deve essere un array di stringhe
     if (!Array.isArray(tags) || tags.length === 0 || tags.some(tag => {
@@ -124,7 +108,6 @@ function create(request, response) {
         });
         return;
     }
-
     // published deve essere boolean
     if (typeof published !== 'boolean') {
         response.status(400)
