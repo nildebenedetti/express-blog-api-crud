@@ -47,7 +47,7 @@ const craftSlug = (post, postArray) => {
 // generare data e ora di pubblicazione
 const generateCurrentTime = () => {
     const currentTime = new Date();
-    return currentTime.toISOString;
+    return currentTime.toISOString();
 };
 
 export {
