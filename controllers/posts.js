@@ -1,5 +1,6 @@
 import { posts } from '../contents/posts.js';
 import { idProgressiveEnumerator, craftSlug, generateCurrentTime } from '../utils/postTools.js';
+import verificaId from '../middlewares/verificaId.js';
 
 // function logic per index route 
 
@@ -43,10 +44,7 @@ function index(request, response) {
 // function logic per show route
 
 function show(request, response) {
-    const { id } = request.params; // destructuring di id da parametri della callback response
-
-    const realId = Number(id.trim()); // normalizzo id a numero
-
+    const realId = request.realId; //recupero realId da middleware verificaId
     // se líd ricevuto e numberizzato non è un numero
     // allora response.status(400) BAD REQUEST
     // e restituiamo un json con errore esplicativo ID NON CORRETTO
@@ -180,6 +178,7 @@ function create(request, response) {
 // function logic per put route
 
 function put(request, response) {
+    const realId = request.realId; //recupero realId da middleware verificaId
     const postFound = posts.find(post => {
         return post.id === realId;
     });
@@ -290,6 +289,7 @@ function put(request, response) {
 // function logic per delete route
 
 function destroy(request, response) {
+    const realId = request.realId; //recupero realId da middleware verificaId
     // facciamo con la findIndex: se lo trova restituisce indice di id, altrimenti -1
     // se trovato, faccimo la splice
     //se non trovato lanciamo 404
