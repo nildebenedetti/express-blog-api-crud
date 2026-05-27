@@ -1,7 +1,7 @@
 import { posts } from '../contents/posts.js';
 import { idProgressiveEnumerator, craftSlug, generateCurrentTime } from '../utils/postTools.js';
-import verificaId from '../middlewares/verificaId.js';
-
+import validateId from '../middlewares/validateId.js';
+import validateTitle from '../middlewares/validateTitle.js';
 // function logic per index route 
 
 function index(request, response) {
@@ -76,11 +76,11 @@ function show(request, response) {
 // function logic per create route
 
 function create(request, response) {
+    const realTitle = request.realTitle;
     // prendo quello che ci serve per creare il post da dati utente
     let body = request.body;
-    const { title, content, image, tags, prep_time, published } = body;
+    const { content, image, tags, prep_time, published } = body;
     const realPrepTime = Number(prep_time);
-    const realTitle = title.trim(); // titolo nazista
     const realContent = content.trim();
 
     // validazioni
@@ -98,21 +98,7 @@ function create(request, response) {
             });
         return;
     }
-    // TITLE obbligatorio e 
-    // deve essere tra i 4 e i 50 caratteri
-    if (realTitle  === '') {
-        response.status(400)
-            .json({
-                error: 'il campo title è obbligatorio: procedi con línserimento di un valore valido'
-            });
-            return;
-    } else if (realTitle.length < 4 || realTitle.length > 50) {
-        response.status(400)
-            .json({
-                error: 'il titolo deve essere tra i 4 e i 50 caratteri spazi inclusi'
-            });
-        return;
-    };
+    
     // CONTENT obbligatorio e
     // deve essere tra i 150 e gli 800 caratteri 
     if (realContent === '') {

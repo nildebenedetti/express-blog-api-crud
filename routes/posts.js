@@ -1,7 +1,8 @@
 import express from 'express';
 import { error } from 'node:console';
 import { index, show, put, create, destroy } from '../controllers/posts.js';
-import verificaId from '../middlewares/verificaId.js';
+import validateId from '../middlewares/validateId.js';
+import validateTitle from '../middlewares/validateTitle.js';
 
 // file di routing con le rotte per la entity posts:
 // Operazioni CRUD: Index, Show, Update, Create
@@ -14,19 +15,19 @@ router.get('/', index);
 
 // show -  GET  http://localhost:3000/posts/:id
 
-router.get('/posts/:id', [verificaId, show]);
+router.get('/posts/:id', [validateId, show]);
 
 // create - POST http://localhost:3000
 
-router.post('/posts/', create)
+router.post('/posts/', [validateTitle, create]);
 
 // update - PUT || PATCH http://localhost:3000/posts/:id
 
-router.put('/posts/:id', [verificaId, put])
+router.put('/posts/:id', [validateId, put])
 
 
 // delete - DELETE http://localhost:3000/posts/:id
 
-router.delete('/posts/:id', [verificaId, destroy]);
+router.delete('/posts/:id', [validateId, destroy]);
 
 export default router;
