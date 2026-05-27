@@ -5,6 +5,8 @@ import validateId from '../middlewares/validateId.js';
 import validateTitle from '../middlewares/validateTitle.js';
 import validateContent from '../middlewares/validateContent.js';
 import validatePrepTime from '../middlewares/validatePrepTime.js';
+import validatePublish from '../middlewares/validatePublished.js';
+import validateTags from '../middlewares/validateTags.js';
 
 // file di routing con le rotte per la entity posts:
 // Operazioni CRUD: Index, Show, Update, Create
@@ -21,11 +23,11 @@ router.get('/posts/:id', [validateId, show]);
 
 // create - POST http://localhost:3000
 
-router.post('/posts/', [validateTitle, validateContent, validatePrepTime, create]);
+router.post('/posts/', [validateTitle, validateContent, validatePrepTime, validatePublish, validateTags, create]);
 
 // update - PUT || PATCH http://localhost:3000/posts/:id
 
-router.put('/posts/:id', [validateId, put])
+router.put('/posts/:id', [validateId, validatePublish, validateTags, put])
 
 
 // delete - DELETE http://localhost:3000/posts/:id
