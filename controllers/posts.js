@@ -96,14 +96,7 @@ function create(request, response) {
         });
         return;
     }
-    // published deve essere boolean
-    if (typeof published !== 'boolean') {
-        response.status(400)
-        .json({
-            error: "published deve corrispondere obbligatoriamente a 'true' oppure 'false'"
-        });
-        return;
-    }
+
 
 
     // mi creo il mio oggetto
@@ -204,15 +197,6 @@ function put(request, response) {
         response.status(400)
         .json({
             error: 'il campo tags deve essere un array di stringhe, non vuoto'
-        });
-        return;
-    }
-
-    // published deve essere boolean
-    if (typeof published !== 'boolean') {
-        response.status(400)
-        .json({
-            error: "published deve corrispondere obbligatoriamente a 'true' oppure 'false'"
         });
         return;
     }
