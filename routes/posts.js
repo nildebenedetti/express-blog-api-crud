@@ -13,6 +13,11 @@ import validateTags from '../middlewares/validateTags.js';
 
 const router = express.Router();
 
+router.get('/test-error', (req, res) => {
+    // Lanciamo un errore intenzionale
+    throw new Error("Mamma mia! Il test dell'errorHandler è riuscito!");
+});
+
 // index - GET  http://localhost:3000
 
 router.get('/', index);
