@@ -18,7 +18,7 @@ function index(request, response) {
     let postsFiltered = posts
     // altrimenti parte tutto il mio viaggione
 
-    const realTag = tag.trim().toLowerCase(); // puliamo la query
+    if (tag) { const realTag = tag.trim().toLowerCase() }; // puliamo la query
 
     if (tag !== undefined) {
         postsFiltered = postsFiltered.filter(post => {
@@ -135,9 +135,9 @@ function put(request, response) {
     const postOld = posts[postFoundIndex];
 
     const postUpdated = {
-        id:postOld.id,
+        id: postOld.id,
         slug: postOld.slug,
-        created_at:postOld.created_at,
+        created_at: postOld.created_at,
         image: postOld.image,   // Tiene l'id, lo slug vecchio e la data di creazione
         title: cleanTitle,
         content: cleanContent,
